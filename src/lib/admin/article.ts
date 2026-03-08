@@ -53,7 +53,6 @@ export async function syncTagsForArticle(articleId: string, tagList: string[]) {
   await prisma.articleTag.deleteMany({ where: { articleId } })
   await prisma.articleTag.createMany({
     data: tags.map((t) => ({ articleId, tagId: t.id })),
-    skipDuplicates: true,
   })
 
   return tags
