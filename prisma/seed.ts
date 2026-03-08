@@ -250,7 +250,6 @@ Franchises are built to keep you inside a world long enough to make leaving feel
           articleId: article.id,
           tagId: t[slug].id,
         })),
-        skipDuplicates: true,
       })
     }
   }
