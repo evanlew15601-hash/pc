@@ -10,10 +10,12 @@ import { ensureUniqueArticleSlug } from '@/lib/admin/uniqueSlug'
 export default async function EditArticlePage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
+
   const article = await prisma.article.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { tags: { include: { tag: true } } },
   })
   if (!article) notFound()

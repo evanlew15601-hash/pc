@@ -4,9 +4,9 @@ import { prisma } from '@/lib/db'
 
 export async function POST(
   _req: Request,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = params
+  const { slug } = await params
 
   const updated = await prisma.article.updateMany({
     where: { slug },
@@ -27,9 +27,9 @@ export async function POST(
 
 export async function GET(
   _req: Request,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = params
+  const { slug } = await params
 
   const article = await prisma.article.findUnique({
     where: { slug },
