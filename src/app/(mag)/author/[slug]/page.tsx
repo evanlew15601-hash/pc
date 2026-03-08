@@ -7,12 +7,14 @@ import { ArticleCard } from '@/components/ArticleCard'
 import { prisma } from '@/lib/db'
 import { publishedWhere } from '@/lib/publication'
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
+type AuthorParams = Promise<{ slug: string }>
+
+type AuthorPageProps = {
+  params: AuthorParams
+}
+
+export async function generateMetadata(props: AuthorPageProps): Promise<Metadata> {
+  const { slug } = await props.params
 
   const author = await prisma.author.findUnique({ where: { slug } })
   if (!author) return {}
@@ -23,12 +25,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function AuthorPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
+export default async function AuthorPage(props: AuthorPageProps) {
+  const { slug } = await props.params
 
   const author = await prisma.author.findUnique({ where: { slug } })
   if (!author) notFound()

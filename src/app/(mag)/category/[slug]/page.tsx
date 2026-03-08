@@ -7,12 +7,14 @@ import { HeroStory } from '@/components/HeroStory'
 import { prisma } from '@/lib/db'
 import { publishedWhere } from '@/lib/publication'
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
+type CategoryParams = Promise<{ slug: string }>
+
+type CategoryPageProps = {
+  params: CategoryParams
+}
+
+export async function generateMetadata(props: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await props.params
 
   const category = await prisma.category.findUnique({ where: { slug } })
   if (!category) return {}
@@ -23,12 +25,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
+export default async function CategoryPage(props: CategoryPageProps) {
+  const { slug } = await props.params
 
   const category = await prisma.category.findUnique({ where: { slug } })
   if (!category) notFound()

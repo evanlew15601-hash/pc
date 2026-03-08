@@ -2,11 +2,14 @@ import { NextResponse } from 'next/server'
 
 import { prisma } from '@/lib/db'
 
-export async function POST(
-  _req: Request,
-  { params }: { params: Promise<{ slug: string }> },
-) {
-  const { slug } = await params
+type ViewParams = Promise<{ slug: string }>
+
+type ViewContext = {
+  params: ViewParams
+}
+
+export async function POST(_req: Request, context: ViewContext) {
+  const { slug } = await context.params
 
   const updated = await prisma.article.updateMany({
     where: { slug },
@@ -25,11 +28,8 @@ export async function POST(
   return NextResponse.json({ views: article?.views ?? 0 })
 }
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ slug: string }> },
-) {
-  const { slug } = await params
+export async function GET(_req: Request, context: ViewContext) {
+  const { slug } = await context.params
 
   const article = await prisma.article.findUnique({
     where: { slug },

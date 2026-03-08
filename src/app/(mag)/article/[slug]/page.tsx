@@ -16,12 +16,14 @@ import { mdxComponents } from '@/lib/mdx'
 import { publishedWhere } from '@/lib/publication'
 import { getReadingTimeMinutes } from '@/lib/readingTime'
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
+type ArticleParams = Promise<{ slug: string }>
+
+type ArticlePageProps = {
+  params: ArticleParams
+}
+
+export async function generateMetadata(props: ArticlePageProps): Promise<Metadata> {
+  const { slug } = await props.params
 
   const article = await prisma.article.findFirst({
     where: { ...publishedWhere(), slug },
@@ -42,12 +44,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
+export default async function ArticlePage(props: ArticlePageProps) {
+  const { slug } = await props.params
 
   const article = await prisma.article.findFirst({
     where: { ...publishedWhere(), slug },

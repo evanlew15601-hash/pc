@@ -5,24 +5,22 @@ import { ArticleCard } from '@/components/ArticleCard'
 import { prisma } from '@/lib/db'
 import { publishedWhere } from '@/lib/publication'
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
+type TagParams = Promise<{ slug: string }>
+
+type TagPageProps = {
+  params: TagParams
+}
+
+export async function generateMetadata(props: TagPageProps): Promise<Metadata> {
+  const { slug } = await props.params
 
   return {
     title: `#${slug}`,
   }
 }
 
-export default async function TagPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
+export default async function TagPage(props: TagPageProps) {
+  const { slug } = await props.params
 
   const tag = await prisma.tag.findUnique({ where: { slug } })
   if (!tag) notFound()
