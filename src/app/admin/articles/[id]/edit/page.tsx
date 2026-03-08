@@ -7,12 +7,14 @@ import { prisma } from '@/lib/db'
 import { parseTagString, articleSchema, syncTagsForArticle } from '@/lib/admin/article'
 import { ensureUniqueArticleSlug } from '@/lib/admin/uniqueSlug'
 
-export default async function EditArticlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
+type EditArticleParams = Promise<{ id: string }>
+
+type EditArticlePageProps = {
+  params: EditArticleParams
+}
+
+export default async function EditArticlePage(props: EditArticlePageProps) {
+  const { id } = await props.params
 
   const article = await prisma.article.findUnique({
     where: { id },

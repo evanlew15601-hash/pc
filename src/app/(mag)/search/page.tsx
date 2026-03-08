@@ -5,16 +5,18 @@ import { SearchBar } from '@/components/SearchBar'
 import { prisma } from '@/lib/db'
 import { publishedWhere } from '@/lib/publication'
 
+type SearchParams = Promise<{ q?: string }>
+
+type SearchPageProps = {
+  searchParams: SearchParams
+}
+
 export const metadata = {
   title: 'Search',
 }
 
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>
-}) {
-  const { q } = await searchParams
+export default async function SearchPage(props: SearchPageProps) {
+  const { q } = await props.searchParams
   const query = (q ?? '').trim()
 
   const results = query
