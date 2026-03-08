@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum ArticleStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
+
+model Author {
+  id         String   @id @default(cuid())
+  name       String
+  slug       String   @unique
+  bio        String
+  avatarUrl  String?
+  websiteUrl String?
+  twitterUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  articles   Article[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  articles    Article[]
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  articles  ArticleTag[]
+}
+
+model Article {
+  id           String        @id @default(cuid())
+  title        String
+  subtitle     String
+  slug         String        @unique
+  excerpt      String
+  bodyMdx      String
+  heroImageUrl String?
+
+  status       ArticleStatus @default(DRAFT)
+  publishedAt  DateTime?
+  scheduledFor DateTime?
+
+  isHero          Boolean @default(false)
+  isFeaturedEssay Boolean @default(false)
+
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  authorId     String
+  author       Author   @relation(fields: [authorId], references: [id])
+
+  categoryId   String
+  category     Category @relation(fields: [categoryId], references: [id])
+
+  tags         ArticleTag[]
+  comments     Comment[]
+
+  @@index([status, publishedAt])
+  @@index([isHero])
+  @@index([isFeaturedEssay])
+}
+
+model ArticleTag {
+  articleId String
+  tagId     String
+
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  name      String
+  body      String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId, approved, createdAt])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

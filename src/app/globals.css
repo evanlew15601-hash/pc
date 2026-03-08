@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --chrome: rgba(255, 255, 255, 0.55);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  font-family: var(--font-body);
+}
+
+/* Fizzy Y2K background */
+.pop-bg {
+  position: relative;
+  background:
+    radial-gradient(1100px circle at 10% 10%, rgba(255, 31, 240, 0.35), transparent 45%),
+    radial-gradient(900px circle at 80% 15%, rgba(109, 45, 255, 0.35), transparent 55%),
+    radial-gradient(900px circle at 50% 90%, rgba(143, 98, 255, 0.22), transparent 60%),
+    linear-gradient(180deg, #fff7ff 0%, #f7f3ff 45%, #fff 100%);
+}
+
+.dark .pop-bg {
+  background:
+    radial-gradient(1100px circle at 10% 10%, rgba(255, 31, 240, 0.25), transparent 45%),
+    radial-gradient(900px circle at 80% 15%, rgba(109, 45, 255, 0.25), transparent 55%),
+    radial-gradient(900px circle at 50% 90%, rgba(143, 98, 255, 0.16), transparent 60%),
+    linear-gradient(180deg, #070414 0%, #0b0620 60%, #070414 100%);
+}
+
+.pop-bg::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 8px),
+    radial-gradient(circle at 70% 60%, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 7px),
+    radial-gradient(circle at 30% 80%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 9px);
+  background-size: 220px 220px, 240px 240px, 260px 260px;
+  background-position: 0 0, 40px 120px, 110px 50px;
+}
+
+.pop-bg::after {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url('/brand/pclogobg.png');
+  background-size: 420px auto;
+  background-repeat: repeat;
+  filter: blur(0.2px);
+}
+
+.dark .pop-bg::before {
+  opacity: 0.10;
+}
+
+.dark .pop-bg::after {
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+}
+
+/* Rich article typography */
+.prose-pop {
+  @apply prose prose-lg max-w-none prose-headings:font-display prose-headings:lowercase prose-headings:tracking-tight prose-a:font-semibold prose-a:text-pop-700 prose-blockquote:border-fizz-300 prose-blockquote:text-black/75 prose-hr:border-white/30 dark:prose-invert dark:prose-a:text-fizz-200 dark:prose-blockquote:border-fizz-500;
+}
+
+@layer components {
+  .glass-card {
+    @apply relative overflow-hidden rounded-bubble border border-white/35 bg-white/45 shadow-glass backdrop-blur-xl dark:border-white/10 dark:bg-white/5;
+  }
+
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent 40%);
+    opacity: 0.55;
+  }
+
+  .dark .glass-card::after {
+    opacity: 0.12;
+  }
+}
