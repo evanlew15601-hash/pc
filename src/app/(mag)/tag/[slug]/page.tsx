@@ -8,19 +8,23 @@ import { publishedWhere } from '@/lib/publication'
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
+  const { slug } = await params
+
   return {
-    title: `#${params.slug}`,
+    title: `#${slug}`,
   }
 }
 
 export default async function TagPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const tag = await prisma.tag.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+
+  const tag = await prisma.tag.findUnique({ where: { slug } })
   if (!tag) notFound()
 
   const articles = await prisma.article.findMany({

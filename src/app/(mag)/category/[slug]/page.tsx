@@ -10,9 +10,11 @@ import { publishedWhere } from '@/lib/publication'
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const category = await prisma.category.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+
+  const category = await prisma.category.findUnique({ where: { slug } })
   if (!category) return {}
 
   return {
@@ -24,9 +26,11 @@ export async function generateMetadata({
 export default async function CategoryPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const category = await prisma.category.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+
+  const category = await prisma.category.findUnique({ where: { slug } })
   if (!category) notFound()
 
   const featured = await prisma.article.findFirst({

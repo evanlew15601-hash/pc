@@ -12,9 +12,10 @@ export const metadata = {
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string }
+  searchParams: Promise<{ q?: string }>
 }) {
-  const query = (searchParams.q ?? '').trim()
+  const { q } = await searchParams
+  const query = (q ?? '').trim()
 
   const results = query
     ? await prisma.article.findMany({

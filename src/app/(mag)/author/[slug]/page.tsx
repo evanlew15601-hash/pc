@@ -10,9 +10,11 @@ import { publishedWhere } from '@/lib/publication'
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const author = await prisma.author.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+
+  const author = await prisma.author.findUnique({ where: { slug } })
   if (!author) return {}
 
   return {
@@ -24,9 +26,11 @@ export async function generateMetadata({
 export default async function AuthorPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const author = await prisma.author.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+
+  const author = await prisma.author.findUnique({ where: { slug } })
   if (!author) notFound()
 
   const articles = await prisma.article.findMany({
